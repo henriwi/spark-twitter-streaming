@@ -7,19 +7,24 @@ import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.twitter.TwitterUtils;
 import twitter4j.Status;
 
+import java.io.IOException;
+import java.util.Properties;
+
 public class Application {
 
-    public static void main(String[] args) throws InterruptedException {
-        System.setProperty("twitter4j.oauth.consumerKey", "");
-        System.setProperty("twitter4j.oauth.consumerSecret", "");
-        System.setProperty("twitter4j.oauth.accessToken", "");
-        System.setProperty("twitter4j.oauth.accessTokenSecret", "");
+    public static void main(String[] args) throws InterruptedException, IOException {
+        Properties twitterProperties = new Properties();
+        twitterProperties.load(Application.class.getResourceAsStream("/twitter.properties"));
+        System.getProperties().putAll(twitterProperties);
 
         SparkConf conf = new SparkConf().setMaster("local[2]").setAppName("twitterApp");
-        JavaStreamingContext javaStreamingContext = new JavaStreamingContext(conf, Durations.seconds(1));
+        JavaStreamingContext streamingContext = new JavaStreamingContext(conf, Durations.seconds(1));
 
-        JavaReceiverInputDStream<Status> stream = TwitterUtils.createStream(javaStreamingContext);
+        JavaReceiverInputDStream<Status> stream = TwitterUtils.createStream(streamingContext);
 
-        stream.filter(status -> status.isRetweet()).print();
+        stream.print();
+
+        streamingContext.start();
+        streamingContext.awaitTermination();
     }
 }
