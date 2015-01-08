@@ -29,6 +29,13 @@
             <artifactId>spark-streaming-twitter_2.10</artifactId>
             <version>1.2.0</version>
         </dependency>
+
+        <!-- web socket -->
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-websocket</artifactId>
+            <version>8.1.5.v20120716</version>
+        </dependency>
     </dependencies>
 
 </project>
