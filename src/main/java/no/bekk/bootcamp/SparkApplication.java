@@ -27,10 +27,8 @@ public class SparkApplication {
                 .foreach(rdd -> {
                     rdd.foreach(s -> {
                         System.out.println(s);
-                        WebSocket.Connection connection = CustomWebSocketServlet.getConnection();
-                        if (connection != null) {
-                            connection.sendMessage(s.getText());
-                        }
+                        
+                        CustomWebSocketServlet.broadcastMessage(s.getText());
                     });
                     return null;
                 });

@@ -7,10 +7,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class CustomWebSocketServlet extends WebSocketServlet {
 
-    static WebSocket.Connection connection;
+    static List<CustomWebSocket> connections = new LinkedList<>();
 
     @Override
     public void init() throws ServletException {
@@ -27,15 +31,18 @@ public class CustomWebSocketServlet extends WebSocketServlet {
         return new CustomWebSocket();
     }
 
-    public static WebSocket.Connection getConnection() {
-        return connection;
+
+    public static void broadcastMessage(String text) {
+        connections.stream().forEach(w -> w.sendMessage(text));
     }
 
     class CustomWebSocket implements WebSocket.OnTextMessage {
-        private Connection connection;
 
+        WebSocket.Connection connection;
+        
         @Override
         public void onClose(int closeCode, String message) {
+            connections.remove(this);
             connection.close();
         }
 
@@ -47,7 +54,15 @@ public class CustomWebSocketServlet extends WebSocketServlet {
         @Override
         public void onOpen(Connection connection) {
             this.connection = connection;
-            CustomWebSocketServlet.connection = connection;
+            connections.add(this);
+        }
+
+        public void sendMessage(String text) {
+            try {
+                connection.sendMessage(text);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
