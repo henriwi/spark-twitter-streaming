@@ -46,7 +46,7 @@ function render(data) {
             return d.r;
         })
         .style("fill", function (d) {
-            return color(d.packageName);
+            return color(d.className);
         });
 
     node.append("text")
@@ -62,7 +62,6 @@ function render(data) {
 
 
         function recurse(name, node) {
-            console.log(node)
             if (node.children) node.children.forEach(function (child) {
                 recurse(node.name, child);
             });
