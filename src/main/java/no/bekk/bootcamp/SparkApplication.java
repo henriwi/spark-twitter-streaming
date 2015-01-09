@@ -5,7 +5,6 @@ import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.twitter.TwitterUtils;
 import scala.Tuple2;
-import twitter4j.HashtagEntity;
 
 import java.io.IOException;
 import java.util.Properties;
