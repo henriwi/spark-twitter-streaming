@@ -34,7 +34,7 @@ public class CustomWebSocketServlet extends WebSocketServlet {
 
 
     public static void broadcastMessage(List<Tuple2<Long, HashtagEntity>> text) {
-        StringBuilder json = new StringBuilder("{\"hashTags\": [");
+        StringBuilder json = new StringBuilder("{\"children\": [");
         
         Optional<String> hashTags = text.stream()
                 .map(tuple -> "{\"hashTag\": \"" + tuple._2().getText() + "\", \"count\": " + tuple._1() + "}")

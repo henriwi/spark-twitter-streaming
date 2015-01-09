@@ -24,14 +24,13 @@ public class SparkApplication {
         JavaStreamingContext streamingContext = new JavaStreamingContext(conf, Durations.milliseconds(100));
 
         TwitterUtils.createStream(streamingContext)
-                .window(Durations.seconds(60), Durations.seconds(5))
+                .window(Durations.seconds(60), Durations.seconds(3))
                 .flatMap(status -> asList(status.getHashtagEntities()))
                 .countByValue()
                 .foreach(rdd -> {
                     List<Tuple2<Long, HashtagEntity>> data = rdd.map(Tuple2::swap)
                             .sortBy(tuple -> tuple._1, false, 1)
-                            .take(3);
-                    //.forEach(tuple -> CustomWebSocketServlet.broadcastMessage(tuple._2.getText() + "," + tuple._1));
+                            .take(10);
                     CustomWebSocketServlet.broadcastMessage(data);
                     return null;
                 });
