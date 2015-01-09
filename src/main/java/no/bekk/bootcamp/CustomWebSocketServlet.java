@@ -2,6 +2,8 @@ package no.bekk.bootcamp;
 
 import org.eclipse.jetty.websocket.WebSocket;
 import org.eclipse.jetty.websocket.WebSocketServlet;
+import scala.Tuple2;
+import twitter4j.HashtagEntity;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 public class CustomWebSocketServlet extends WebSocketServlet {
 
@@ -30,8 +33,17 @@ public class CustomWebSocketServlet extends WebSocketServlet {
     }
 
 
-    public static void broadcastMessage(String text) {
-        connections.stream().forEach(w -> w.sendMessage(text));
+    public static void broadcastMessage(List<Tuple2<Long, HashtagEntity>> text) {
+        StringBuilder json = new StringBuilder("{\"hashTags\": [");
+        
+        Optional<String> hashTags = text.stream()
+                .map(tuple -> "{\"hashTag\": \"" + tuple._2().getText() + "\", \"count\": " + tuple._1() + "}")
+                .reduce((a, b) -> (a + ',' + b));
+        
+        json.append(hashTags.get());
+        json.append("]}");
+        
+        connections.stream().forEach(w -> w.sendMessage(json.toString()));
     }
 
     class CustomWebSocket implements WebSocket.OnTextMessage {
