@@ -1,8 +1,10 @@
+var bootcamp = bootcamp || {};
+
 $(function () {
+    initD3();
 
     ws = new WebSocket('ws://localhost:8080/ws');
     ws.onmessage = function (msg) {
-        $("body").empty();
         var data = JSON.parse(msg.data);
         render(data);
     }
@@ -10,56 +12,65 @@ $(function () {
     console.log("ready!");
 });
 
-function render(data) {
-    var diameter = 960,
+function initD3() {
+    bootcamp.diameter = 960,
         format = d3.format(",d"),
         color = d3.scale.category20c();
 
-    var bubble = d3.layout.pack()
-        .sort(null)
-        .size([diameter, diameter])
-        .padding(1.5);
-
-    var svg = d3.select("body").append("svg")
-        .attr("width", diameter)
-        .attr("height", diameter)
+    bootcamp.svg = d3.select("body").append("svg")
+        .attr("width", bootcamp.diameter)
+        .attr("height", bootcamp.diameter)
         .attr("class", "bubble");
 
-    var node = svg.selectAll(".node")
-        .data(bubble.nodes(classes(data))
+    bootcamp.bubble = d3.layout.pack()
+        .sort(null)
+        .size([bootcamp.diameter, bootcamp.diameter])
+        .padding(1.5);
+}
+
+function render(data) {
+    var duration = 200;
+    var delay = 0;
+
+    var node = bootcamp.svg.selectAll(".node")
+        .data(bootcamp.bubble.nodes(classes(data))
             .filter(function (d) {
                 return !d.children;
-            }))
-        .enter().append("g")
-        .attr("class", "node")
-        .attr("transform", function (d) {
-            return "translate(" + d.x + "," + d.y + ")";
-        });
+            }));
 
-    node.append("title")
-        .text(function (d) {
-            return d.className + ": " + format(d.value);
-        });
+    node.transition()
+        .duration(duration)
+        .delay(function(d, i) {delay = i * 7; return delay;})
+        .attr('transform', function(d) { return 'translate(' + d.x + ',' + d.y + ')'; })
+        .attr('r', function(d) { return d.r; })
+        .style('opacity', 1); // force to 1, so they don't get stuck below 1 at enter()
 
-    node.append("circle")
+   var enterSelection = node.enter().append("g");
+    enterSelection.append("circle")
         .attr("r", function (d) {
             return d.r;
         })
         .style("fill", function (d) {
             return color(d.className);
-        });
+        })
+        .attr("class", "node")
+        .attr("transform", function (d) {
+            return "translate(" + d.x + "," + d.y + ")";
+        })
+        .style('opacity', 0)
+        .transition()
+        .duration(duration * 1.2)
+        .style('opacity', 1);
 
-    node.append("text")
-        .attr("dy", ".3em")
-        .style("text-anchor", "middle")
-        .text(function (d) {
-            return d.className.substring(0, d.r / 3);
-        });
+    node.exit()
+        .transition()
+        .duration(duration + delay)
+        .style('opacity', 0)
+        .remove();
 
-// Returns a flattened hierarchy containing all leaf nodes under the root.
+    // Returns a flattened hierarchy containing all leaf nodes under the root.
     function classes(root) {
         var classes = [];
-
 
         function recurse(name, node) {
             if (node.children) node.children.forEach(function (child) {
@@ -72,7 +83,6 @@ function render(data) {
         return {children: classes};
     }
 
-    d3.select(self.frameElement).style("height", diameter + "px");
-
+    d3.select(self.frameElement).style("height", bootcamp.diameter + "px");
 }
 
