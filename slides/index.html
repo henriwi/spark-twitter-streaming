@@ -1,0 +1,117 @@
+<!--
+Google IO 2012/2013 HTML5 Slide Template
+
+Authors: Eric Bidelman <ebidel@gmail.com>
+         Luke Mahé <lukem@google.com>
+
+URL: https://code.google.com/p/io-2012-slides
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">-->
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+    <!--This one seems to work all the time, but really small on ipad-->
+    <!--<meta name="viewport" content="initial-scale=0.4">-->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="stylesheet" media="all" href="theme/css/default.css">
+    <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="theme/css/phone.css">
+    <link rel="stylesheet" media="all" href="custom.css">
+    <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
+    <script data-main="js/slides" src="js/require-1.0.8.min.js"></script>
+</head>
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+    <slide class="title-slide segue nobackground">
+        <aside class="gdbar"><img src="images/spark-logo-hd.png"></aside>
+
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+        <hgroup class="auto-fadein">
+            <h1 data-config-title><!-- populated from slide_config.json --></h1>
+            <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+            <p data-config-presenter><!-- populated from slide_config.json --></p>
+        </hgroup>
+    </slide>
+
+    <slide>
+        <hgroup>
+            <h2>What is Spark?</h2>
+        </hgroup>
+        <article class="large">
+            <img height="500px" src="figures/spark-architecture.png"/>
+        </article>
+    </slide>
+
+    <slide>
+        <hgroup>
+            <h2>RDD (Resillient Distributed Dataset)</h2>
+        </hgroup>
+        <article class="large">
+            <ul>
+                <li>Core concept in Spark</li>
+                <li>Spark automatically distributes data and parallelizes operations on RDDs</li>
+                <li>Transformations vs. actions</li>
+            </ul>
+            <img width="700px" src="figures/transformation-vs-action.png" />
+            </article>
+    </slide>
+
+    <slide>
+        <hgroup>
+            <h2>Reading and filtering files</h2>
+        </hgroup>
+        <article class="large">
+            
+            <pre class="prettyprint">val sc = new SparkContext("local[4]", "AppName")
+
+val log: RDD[AccessLogRecord] = sc.textFile("access_log-1")
+  .map(AccessLogParser.parseRecord) // Transformation (returns new RDD)
+
+val result: Array[AccessLogRecord] = log
+  .filter(record => record.bytesSent > 1024) // Transformation (returns new RDD)
+  .collect() // Action (compute result)</pre>
+        </article>
+    </slide>
+
+    <slide class="thank-you-slide segue nobackground">
+        <article class="flexbox vleft">
+            <h2>Questions?</h2>
+            <br><br>
+            <ul>
+                <li>Slides: <a href="http://henriwi.github.com/senior-bootcamp">http://henriwi.github.com/senior-bootcamp</a></span></li>
+                <li>Code: <a href="https://github.com/henriwi/senior-bootcamp">https://github.com/henriwi/senior-bootcamp</a></li>
+            </ul>
+        </article>
+        <p class="auto-fadein" data-config-contact>
+            <!-- populated from slide_config.json -->
+        </p>
+    </slide>
+
+
+    <slide class="backdrop"></slide>
+
+    </slides>
+
+<script>
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-XXXXXXXX-1']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+
+<!--[if IE]>
+<script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+<script>CFInstall.check({mode: 'overlay'});</script>
+<![endif]-->
+</body>
+</html>
