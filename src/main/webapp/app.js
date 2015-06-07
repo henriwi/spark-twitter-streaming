@@ -38,35 +38,46 @@ function render(data) {
                 return !d.children;
             }));
 
-    node.transition()
-        .duration(duration)
-        .delay(function(d, i) {delay = i * 7; return delay;})
-        .attr('transform', function(d) { return 'translate(' + d.x + ',' + d.y + ')'; })
-        .attr('r', function(d) { return d.r; })
-        .style('opacity', 1); // force to 1, so they don't get stuck below 1 at enter()
+    var enterNode = node
+        .enter()
+        .append("g")
+        .attr("class", "node")
+        .attr('transform', function (d) {
+            return 'translate(' + d.x + ',' + d.y + ')';
+        });
 
-   var enterSelection = node.enter().append("g");
-    enterSelection.append("circle")
+    enterNode.append("circle")
+        .attr("class", "circle")
         .attr("r", function (d) {
             return d.r;
         })
         .style("fill", function (d) {
             return color(d.className);
-        })
-        .attr("class", "node")
-        .attr("transform", function (d) {
-            return "translate(" + d.x + "," + d.y + ")";
-        })
-        .style('opacity', 0)
-        .transition()
-        .duration(duration * 1.2)
-        .style('opacity', 1);
+        });
 
-    node.exit()
+    enterNode.append("text")
+        .attr("dy", ".3em")
+        .text(function (d) {
+            return d.className
+        })
+        .style("text-anchor", "middle");
+
+    // Transitions
+    node.transition()
+        .duration(duration)
+        .delay(function (d, i) {
+            delay = i * 7;
+            return delay;
+        })
+        .attr('transform', function (d) {
+            return 'translate(' + d.x + ',' + d.y + ')';
+        });
+
+    node.select("circle")
         .transition()
-        .duration(duration + delay)
-        .style('opacity', 0)
-        .remove();
+        .attr('r', function (d) {
+            return d.r;
+        });
 
     // Returns a flattened hierarchy containing all leaf nodes under the root.
     function classes(root) {
