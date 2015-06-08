@@ -27,7 +27,7 @@ public class SparkApplication {
                 .window(Durations.seconds(180), Durations.seconds(3))
                 .flatMap(status -> asList(status.getHashtagEntities()))
                 .countByValue()
-                .foreach(rdd -> {
+                .foreachRDD(rdd -> {
                     List<Tuple2<Long, HashtagEntity>> data = rdd.map(Tuple2::swap)
                             .sortBy(tuple -> tuple._1, false, 1)
                             .take(20);
