@@ -16,10 +16,6 @@ import static java.util.Arrays.asList;
 public class SparkApplication {
 
     public void run() throws InterruptedException, IOException {
-        Properties twitterProperties = new Properties();
-        twitterProperties.load(SparkApplication.class.getResourceAsStream("/twitter.properties"));
-        System.getProperties().putAll(twitterProperties);
-
         SparkConf conf = new SparkConf().setMaster("local[2]").setAppName("twitterApp");
         JavaStreamingContext streamingContext = new JavaStreamingContext(conf, Durations.milliseconds(1000));
 
@@ -30,7 +26,7 @@ public class SparkApplication {
                 .foreachRDD(rdd -> {
                     List<Tuple2<Long, HashtagEntity>> data = rdd.map(Tuple2::swap)
                             .sortBy(tuple -> tuple._1, false, 1)
-                            .take(20);
+                            .take(10);
                     CustomWebSocketServlet.broadcastMessage(data);
                     return null;
                 });

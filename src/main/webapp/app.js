@@ -3,7 +3,9 @@ var bootcamp = bootcamp || {};
 $(function () {
     initD3();
 
-    ws = new WebSocket('ws://localhost:8080/ws');
+    var protocol = location.protocol === "https:" ? "wss:" : "ws:";
+    var ws = new WebSocket(protocol + "//" + location.host + "/ws");
+
     ws.onmessage = function (msg) {
         var data = JSON.parse(msg.data);
         render(data);
