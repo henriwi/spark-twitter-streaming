@@ -1,4 +1,4 @@
-package no.bekk.bootcamp;
+package twitter.stream;
 
 import org.eclipse.jetty.websocket.WebSocket;
 import org.eclipse.jetty.websocket.WebSocketServlet;

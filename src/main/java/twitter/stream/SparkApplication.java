@@ -1,4 +1,4 @@
-package no.bekk.bootcamp;
+package twitter.stream;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.streaming.Durations;
