@@ -1,1 +1,1 @@
-web:	java $JAVA_OPTS  -cp target/classes:target/dependency/* no.bekk.bootcamp.JettyServer
+web:	java $JAVA_OPTS  -cp target/classes:target/dependency/* twitter.stream.JettyServer
