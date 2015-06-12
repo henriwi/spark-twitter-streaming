@@ -20,7 +20,8 @@ public class SparkApplication {
         setTwitterConfig();
 
         SparkConf conf = new SparkConf().setMaster("local[2]").setAppName("twitterApp");
-        JavaStreamingContext streamingContext = new JavaStreamingContext(conf, Durations.milliseconds(1000));
+        JavaStreamingContext streamingContext =
+                new JavaStreamingContext(conf, Durations.milliseconds(1000));
 
         TwitterUtils.createStream(streamingContext)
                 .window(Durations.seconds(180), Durations.seconds(3))

@@ -2,7 +2,7 @@ var SLIDE_CONFIG = {
   // Slide settings
   settings: {
     title: 'Spark Streaming',
-    subtitle: 'subtitle?',
+    subtitle: '',
     //eventInfo: {
     //  title: 'Google I/O',
     //  date: '6/x/2013'
