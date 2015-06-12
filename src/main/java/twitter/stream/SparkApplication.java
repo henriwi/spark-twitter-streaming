@@ -8,6 +8,7 @@ import scala.Tuple2;
 import twitter4j.HashtagEntity;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
 
@@ -16,6 +17,8 @@ import static java.util.Arrays.asList;
 public class SparkApplication {
 
     public void run() throws InterruptedException, IOException {
+        setTwitterConfig();
+
         SparkConf conf = new SparkConf().setMaster("local[2]").setAppName("twitterApp");
         JavaStreamingContext streamingContext = new JavaStreamingContext(conf, Durations.milliseconds(1000));
 
@@ -33,5 +36,15 @@ public class SparkApplication {
 
         streamingContext.start();
         streamingContext.awaitTermination();
+    }
+
+    private static void setTwitterConfig() throws IOException {
+        Properties twitterProperties = new Properties();
+        InputStream twitterConfig = SparkApplication.class.getResourceAsStream("/twitter.properties");
+
+        if (twitterConfig != null) {
+            twitterProperties.load(twitterConfig);
+            System.getProperties().putAll(twitterProperties);
+        }
     }
 }
