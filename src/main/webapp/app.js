@@ -58,9 +58,10 @@ function render(data) {
         });
 
     enterNode.append("text")
+        .attr("class", "text")
         .attr("dy", ".3em")
         .text(function (d) {
-            return d.className
+            return d.className + ' (' + d.value + ')';
         })
         .style("text-anchor", "middle");
 
@@ -79,6 +80,12 @@ function render(data) {
         .transition()
         .attr('r', function (d) {
             return d.r;
+        });
+
+    node.select("text")
+        .transition()
+        .text(function (d) {
+            return d.className + ' (' + d.value + ')';
         });
 
     // Returns a flattened hierarchy containing all leaf nodes under the root.
