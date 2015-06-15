@@ -118,7 +118,7 @@ ssc.awaitTermination()</pre>
         </hgroup>
         <article class="large">
 
-            <pre class="prettyprint">SparkConf conf = new SparkContext("local[2]", "twitterApp");
+            <pre class="prettyprint">SparkConf conf = new SparkConf().setMaster("local[2]").setAppName("twitterApp");
 JavaStreamingContext streamingContext =
                 new JavaStreamingContext(conf, Durations.milliseconds(1000));
 
