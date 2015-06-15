@@ -69,12 +69,12 @@ URL: https://code.google.com/p/io-2012-slides
 
             <pre class="prettyprint">val sc = new SparkContext("local[4]", "AppName")
 
-val log: RDD[AccessLogRecord] = sc.textFile("access_log-1")
+val log: RDD[AccessLogRecord] = sc.textFile("access_log")
   .map(AccessLogParser.parseRecord) // Transformation (returns new RDD)
 
 val result: Array[AccessLogRecord] = log
   .filter(record => record.bytesSent > 1024) // Transformation (returns new RDD)
-  .collect() // Action (compute result)</pre>
+  .collect() // Action (starts transformations and compute result)</pre>
         </article>
     </slide>
 
@@ -85,21 +85,9 @@ val result: Array[AccessLogRecord] = log
         <article class="large">
             <img width="800px" src="figures/streaming-architecture.png" />
             <ul>
-                <li>Multiple input sources (Twitter, Kafka, HDFS, and more)</li>
                 <li>Batch processing vs. streaming</li>
                 <li>Reuses Spark Core</li>
-            </ul>
-        </article>
-    </slide>
-
-    <slide>
-        <hgroup>
-            <h2>DStreams (Discretized Streams)</h2>
-        </hgroup>
-        <article class="large">
-            <img width="900px" src="figures/streaming-dstream.png" />
-            <ul>
-                <li>Continuous series of RDDs</li>
+                <li>Multiple input sources (Twitter, Kafka, HDFS, and more)</li>
             </ul>
         </article>
     </slide>
@@ -109,7 +97,7 @@ val result: Array[AccessLogRecord] = log
             <h2>Spark Streaming Example</h2>
         </hgroup>
         <article class="large">
-            <pre class="prettyprint">val conf = new SparkConf().setAppName("Log Analyzer").setMaster("local[2]")
+            <pre class="prettyprint">val conf = new SparkContext("local[4]", "AppName")
 val ssc = new StreamingContext(new SparkContext(conf), Seconds(1))
 
 ssc.socketTextStream("localhost", 8000)
@@ -124,28 +112,13 @@ ssc.awaitTermination()</pre>
         </article>
     </slide>
 
-
-    <slide>
-        <hgroup>
-            <h2>Window Operation</h2>
-        </hgroup>
-        <article class="large">
-            <img width="900px" src="figures/streaming-dstream-window.png" />
-
-            <ul>
-                <li>window length=3 and sliding interval=2</li>
-            </ul>
-        </article>
-    </slide>
-
-
     <slide>
         <hgroup>
             <h2>Twitter Streaming App</h2>
         </hgroup>
         <article class="large">
 
-            <pre class="prettyprint">SparkConf conf = new SparkConf().setMaster("local[2]").setAppName("twitterApp");
+            <pre class="prettyprint">SparkConf conf = new SparkContext("local[2]", "twitterApp");
 JavaStreamingContext streamingContext =
                 new JavaStreamingContext(conf, Durations.milliseconds(1000));
 
@@ -169,6 +142,21 @@ streamingContext.awaitTermination();</pre>
 
     <slide>
         <hgroup>
+            <h2>Demo</h2>
+        </hgroup>
+        <article class="large">
+            <ul>
+                <li>Spark Streaming</li>
+                <li>Jetty + WebSocket</li>
+                <li>D3.js</li>
+                <li>Heroku</li>
+                <li><a href="https://spark-twitter-streaming.herokuapp.com/">https://spark-twitter-streaming.herokuapp.com/</a></li>
+            </ul>
+        </article>
+    </slide>
+
+    <slide>
+        <hgroup>
             <h2>Spark UI - Stages</h2>
         </hgroup>
         <article class="large">
@@ -186,28 +174,15 @@ streamingContext.awaitTermination();</pre>
         </article>
     </slide>
 
-    <slide>
-        <hgroup>
-            <h2>Demo</h2>
-        </hgroup>
-        <article class="large">
-            <ul>
-                <li>Spark Streaming</li>
-                <li>Jetty + WebSocket</li>
-                <li>D3.js</li>
-                <li>Heroku</li>
-                <li><a href="https://spark-twitter-streaming.herokuapp.com/">https://spark-twitter-streaming.herokuapp.com/</a></li>
-            </ul>
-        </article>
-    </slide>
-
     <slide class="thank-you-slide segue nobackground">
         <article class="flexbox vleft">
             <h2>Questions?</h2>
             <br><br>
             <ul>
+                <li>Apache Spark: <a href="https://spark.apache.org/">https://spark.apache.org/</a></li>
                 <li>Slides: <a href="http://henriwi.github.com/spark-twitter-streaming">http://henriwi.github.com/spark-twitter-streaming</a></span></li>
                 <li>Code: <a href="https://github.com/henriwi/spark-twitter-streaming">https://github.com/henriwi/spark-twitter-streaming</a></li>
+                <li>Twitter app: <a href="https://spark-twitter-streaming.herokuapp.com/">https://spark-twitter-streaming.herokuapp.com/</a></li>
             </ul>
         </article>
         <p class="auto-fadein" data-config-contact>
