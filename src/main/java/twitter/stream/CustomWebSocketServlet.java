@@ -21,7 +21,7 @@ public class CustomWebSocketServlet extends WebSocketServlet {
     public void init() throws ServletException {
         super.init();
     }
-
+//Comment
     protected void doGet(HttpServletRequest request,
                          HttpServletResponse response) throws ServletException, IOException {
         getServletContext().getNamedDispatcher("default").forward(request,
